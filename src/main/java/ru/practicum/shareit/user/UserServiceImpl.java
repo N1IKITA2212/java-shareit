@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.AlreadyExistsUserException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.dto.UserPatchDto;
 
@@ -17,27 +18,27 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return userRepository.getAllUsers().stream().map(userMapper::toUserDto).toList();
     }
 
     @Override
-    public User getUserById(Long userId) {
-        return userRepository.getUserById(userId).orElseThrow(() -> new NotFoundException(
+    public UserDto getUserById(Long userId) {
+        return userMapper.toUserDto(userRepository.getUserById(userId).orElseThrow(() -> new NotFoundException(
                 "Пользователь с таким id не найден"
-        ));
+        )));
     }
 
     @Override
-    public User createUser(UserCreateDto userCreateDto) {
+    public UserDto createUser(UserCreateDto userCreateDto) {
         if (userRepository.isUserWithEmailExist(userCreateDto.getEmail())) {
             throw new AlreadyExistsUserException("Пользователь с таким email уже существует");
         }
-        return userRepository.createUser(userMapper.fromCreateDto(userCreateDto));
+        return userMapper.toUserDto(userRepository.createUser(userMapper.fromCreateDto(userCreateDto)));
     }
 
     @Override
-    public User updateUser(Long userId, UserPatchDto userPatchDto) {
+    public UserDto updateUser(Long userId, UserPatchDto userPatchDto) {
         if (!userRepository.isUserExists(userId)) {
             throw new NotFoundException("Пользователь с переданным id не существует");
         }
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getUserById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
         userMapper.applyPatch(userPatchDto, user);
-        return user;
+        return userMapper.toUserDto(user);
     }
 
     @Override
