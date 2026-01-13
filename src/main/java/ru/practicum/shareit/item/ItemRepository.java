@@ -33,8 +33,4 @@ public class ItemRepository {
                         item.getDescription().toLowerCase().contains(text.toLowerCase()))
                 .filter(Item::isAvailable).toList();
     }
-
-    public boolean isItemExists(Long itemId) {
-        return getItemById(itemId).isPresent();
-    }
 }
