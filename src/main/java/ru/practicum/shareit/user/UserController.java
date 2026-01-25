@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
