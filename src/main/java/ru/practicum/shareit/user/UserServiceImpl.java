@@ -19,33 +19,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers().stream().map(userMapper::toUserDto).toList();
+        return userRepository.findAll().stream().map(userMapper::toUserDto).toList();
     }
 
     @Override
     public UserDto getUserById(Long userId) {
-        return userMapper.toUserDto(userRepository.getUserById(userId).orElseThrow(() -> new NotFoundException(
+        return userMapper.toUserDto(userRepository.findById(userId).orElseThrow(() -> new NotFoundException(
                 "Пользователь с таким id не найден"
         )));
     }
 
     @Override
     public UserDto createUser(UserCreateDto userCreateDto) {
-        if (userRepository.isUserWithEmailExist(userCreateDto.getEmail())) {
+        if (userRepository.findByEmail(userCreateDto.getEmail()).isPresent()) {
             throw new AlreadyExistsUserException("Пользователь с таким email уже существует");
         }
-        return userMapper.toUserDto(userRepository.createUser(userMapper.fromCreateDto(userCreateDto)));
+        return userMapper.toUserDto(userRepository.save(userMapper.fromCreateDto(userCreateDto)));
     }
 
     @Override
     public UserDto updateUser(Long userId, UserPatchDto userPatchDto) {
-        if (!userRepository.isUserExists(userId)) {
+        if (userRepository.findById(userId).isEmpty()) {
             throw new NotFoundException("Пользователь с переданным id не существует");
         }
-        if (userRepository.isUserWithEmailExist(userPatchDto.getEmail())) {
+        if (userRepository.findByEmail(userPatchDto.getEmail()).isPresent()) {
             throw new AlreadyExistsUserException("Пользователь с таким email уже существует");
         }
-        User user = userRepository.getUserById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден"));
         userMapper.applyPatch(userPatchDto, user);
         return userMapper.toUserDto(user);
@@ -53,6 +53,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
-        userRepository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 }

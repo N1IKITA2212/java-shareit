@@ -24,34 +24,34 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItemById(Long itemId) {
-        return itemMapper.toItemDto(itemRepository.getItemById(itemId)
+        return itemMapper.toItemDto(itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с таким id не найден")));
     }
 
     @Override
     public List<ItemDto> getUserItems(Long ownerId) {
-        if (!userRepository.isUserExists(ownerId)) {
+        if (userRepository.findById(ownerId).isEmpty()) {
             throw new NotFoundException("Пользователь с таким id не найден");
         }
-        return itemRepository.getUserItems(ownerId).stream().map(itemMapper::toItemDto).toList();
+        return itemRepository.findByOwnerId(ownerId).stream().map(itemMapper::toItemDto).toList();
     }
 
     @Override
     public ItemDto createItem(Long ownerId, ItemCreateDto itemCreateDto) {
-        if (!userRepository.isUserExists(ownerId)) {
+        if (userRepository.findById(ownerId).isEmpty()) {
             throw new NotFoundException("Пользователь с таким id не найден");
         }
         Item item = itemMapper.fromCreateDto(itemCreateDto);
         item.setOwnerId(ownerId);
-        return itemMapper.toItemDto(itemRepository.createItem(item));
+        return itemMapper.toItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto updateItem(Long ownerId, ItemPatchDto itemPatchDto, Long itemId) {
-        if (!userRepository.isUserExists(ownerId)) {
+        if (userRepository.findById(ownerId).isEmpty()) {
             throw new NotFoundException("Пользователь с таким id не найден");
         }
-        Item item = itemRepository.getItemById(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с таким id не найден"));
         if (!Objects.equals(item.getOwnerId(), ownerId)) {
             throw new AccessViolationException("Редактирование данного предмета недоступно");
@@ -65,6 +65,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.searchItem(text).stream().map(itemMapper::toItemDto).toList();
+        return itemRepository.findByIsAvailableTrueAndNameContainingIgnoreCaseOrIsAvailableTrueAndDescriptionContainingIgnoreCase(text, text)
+                .stream().map(itemMapper::toItemDto).toList();
     }
 }
