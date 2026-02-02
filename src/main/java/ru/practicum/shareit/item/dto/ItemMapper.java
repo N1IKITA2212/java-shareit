@@ -1,17 +1,22 @@
 package ru.practicum.shareit.item.dto;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.model.Item;
+
+import java.util.List;
 
 @Component
 public class ItemMapper {
+
     public ItemDto toItemDto(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.isAvailable(),
-                item.getOwnerId()
+                item.getOwner().getId()
         );
     }
 
@@ -33,5 +38,19 @@ public class ItemMapper {
         if (itemPatchDto.getIsAvailable() != null) {
             item.setAvailable(itemPatchDto.getIsAvailable());
         }
+    }
+
+    public ItemWithBookingDto toItemWithBookingDto(Item item, List<CommentDto> comments, BookingDto lastBooking,
+                                                   BookingDto nextBooking) {
+        ItemWithBookingDto itemWithBookingDto = new ItemWithBookingDto();
+        itemWithBookingDto.setId(item.getId());
+        itemWithBookingDto.setName(item.getName());
+        itemWithBookingDto.setDescription(item.getDescription());
+        itemWithBookingDto.setOwnerId(item.getOwner().getId());
+        itemWithBookingDto.setAvailable(item.isAvailable());
+        itemWithBookingDto.setComments(comments);
+        itemWithBookingDto.setLastBooking(lastBooking);
+        itemWithBookingDto.setNextBooking(nextBooking);
+        return itemWithBookingDto;
     }
 }

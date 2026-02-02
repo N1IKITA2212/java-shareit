@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import ru.practicum.shareit.user.User;
 
 @Data
 @EqualsAndHashCode(of = {"id"})
@@ -18,6 +19,7 @@ public class Item {
     private String description;
     @Column(name = "is_available", nullable = false)
     private boolean isAvailable;
-    @Column(name = "owner_id")
-    private Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 }

@@ -1,7 +1,9 @@
 package ru.practicum.shareit.user;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.AlreadyExistsUserException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dto.UserCreateDto;
@@ -38,11 +40,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(Long userId, UserPatchDto userPatchDto) {
-        if (userRepository.findById(userId).isEmpty()) {
-            throw new NotFoundException("Пользователь с переданным id не существует");
-        }
-        if (userRepository.findByEmail(userPatchDto.getEmail()).isPresent()) {
+        if (userPatchDto.getEmail() != null &&
+                userRepository.findByEmail(userPatchDto.getEmail())
+                        .filter(user -> !user.getId().equals(userId)).isPresent()) {
             throw new AlreadyExistsUserException("Пользователь с таким email уже существует");
         }
         User user = userRepository.findById(userId)
@@ -52,6 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
