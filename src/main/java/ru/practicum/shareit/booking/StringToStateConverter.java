@@ -13,7 +13,7 @@ public class StringToStateConverter implements Converter<String, State> {
             return State.valueOf(source.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new BadRequestException("Неверный state: " + source
-                    +". Возможные значения: all, current, past, future, waiting, rejected");
+                    + ". Возможные значения: all, current, past, future, waiting, rejected");
         }
     }
 }
