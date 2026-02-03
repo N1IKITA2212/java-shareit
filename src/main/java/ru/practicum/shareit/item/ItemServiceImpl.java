@@ -126,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return new ArrayList<>();
         }
-        return itemRepository.findByIsAvailableTrueAndNameContainingIgnoreCaseOrIsAvailableTrueAndDescriptionContainingIgnoreCase(text, text)
+        return itemRepository.searchAvailableItems(text)
                 .stream().map(itemMapper::toItemDto).toList();
     }
 

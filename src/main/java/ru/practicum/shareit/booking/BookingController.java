@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.exceptions.BadRequestException;
 
 import java.util.List;
 
@@ -25,16 +24,7 @@ public class BookingController {
     public BookingDto changeBookingStatus(@PathVariable Long bookingId,
                                           @RequestParam String approved,
                                           @RequestHeader(name = "X-Sharer-User-Id") Long userId) {
-        BookingStatus bookingStatus;
-        if (approved.equalsIgnoreCase("true")) {
-            bookingStatus = BookingStatus.APPROVED;
-        } else if (approved.equalsIgnoreCase("false")) {
-            bookingStatus = BookingStatus.REJECTED;
-        } else {
-            throw new BadRequestException("Неверное значение параметра 'approved': " + approved
-                    + ". Должно быть true или false");
-        }
-        return bookingService.changeBookingStatus(bookingId, bookingStatus, userId);
+        return bookingService.changeBookingStatus(bookingId, approved, userId);
     }
 
     @GetMapping("/{bookingId}")

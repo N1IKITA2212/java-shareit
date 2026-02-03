@@ -1,11 +1,13 @@
 package ru.practicum.shareit.user;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(of = {"id", "email"})
 @Entity
 @Table(name = "users", schema = "public")

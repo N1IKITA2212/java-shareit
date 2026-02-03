@@ -9,7 +9,7 @@ public interface BookingService {
 
     BookingDto createBooking(Long bookerId, BookingCreateDto bookingCreateDto);
 
-    BookingDto changeBookingStatus(Long bookingId, BookingStatus bookingStatus, Long userId);
+    BookingDto changeBookingStatus(Long bookingId, String approved, Long userId);
 
     BookingDto getBookingInfo(Long bookingId, Long userId);
 

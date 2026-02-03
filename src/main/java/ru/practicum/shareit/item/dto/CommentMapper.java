@@ -1,11 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.Data;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.model.Comment;
 
 @Component
-@Data
 public class CommentMapper {
 
     public CommentDto toCommentDto(Comment comment) {

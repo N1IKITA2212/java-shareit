@@ -48,7 +48,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto changeBookingStatus(Long bookingId, BookingStatus bookingStatus, Long userId) {
+    public BookingDto changeBookingStatus(Long bookingId, String approved, Long userId) {
+        BookingStatus bookingStatus;
+        if (approved.equalsIgnoreCase("true")) {
+            bookingStatus = BookingStatus.APPROVED;
+        } else if (approved.equalsIgnoreCase("false")) {
+            bookingStatus = BookingStatus.REJECTED;
+        } else {
+            throw new BadRequestException("Неверное значение параметра 'approved': " + approved
+                    + ". Должно быть true или false");
+        }
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Запрос на бронирование не найден"));
         if (!Objects.equals(booking.getItem().getOwner().getId(), userId)) {
