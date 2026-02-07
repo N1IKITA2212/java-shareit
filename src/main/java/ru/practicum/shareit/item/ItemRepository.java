@@ -1,36 +1,26 @@
 package ru.practicum.shareit.item;
 
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-@Component
-public class ItemRepository {
-    private final Map<Long, Item> items = new HashMap<>();
-    private Long itemId = 1L;
+@Repository
+public interface ItemRepository extends JpaRepository<Item, Long> {
 
-    public List<Item> getUserItems(Long ownerId) {
-        return items.values().stream().filter(item -> item.getOwnerId().equals(ownerId)).toList();
-    }
+    @Query(value = """
+            SELECT it
+            FROM Item as it
+            WHERE it.isAvailable = true AND
+            (
+            LOWER(it.name) LIKE LOWER(CONCAT('%', :text, '%')) OR
+            LOWER(it.description) LIKE LOWER(CONCAT('%', :text, '%'))
+            )
+            """)
+    List<Item> searchAvailableItems(@Param("text") String text);
 
-    public Optional<Item> getItemById(Long itemId) {
-        return Optional.ofNullable(items.get(itemId));
-    }
-
-    public Item createItem(Item item) {
-        item.setId(itemId++);
-        items.put(item.getId(), item);
-        return item;
-    }
-
-    public List<Item> searchItem(String text) {
-        return items.values().stream()
-                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        item.getDescription().toLowerCase().contains(text.toLowerCase()))
-                .filter(Item::isAvailable).toList();
-    }
+    List<Item> findByOwnerId(Long ownerId);
 }
