@@ -10,13 +10,17 @@ import java.util.List;
 public class ItemMapper {
 
     public ItemDto toItemDto(Item item) {
-        return new ItemDto(
-                item.getId(),
-                item.getName(),
-                item.getDescription(),
-                item.isAvailable(),
-                item.getOwner().getId()
-        );
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.isAvailable());
+        itemDto.setOwnerId(item.getOwner().getId());
+
+        if (item.getItemRequest() != null) {
+            itemDto.setRequestId(item.getItemRequest().getId());
+        }
+        return itemDto;
     }
 
     public Item fromCreateDto(ItemCreateDto itemCreateDto) {
@@ -51,5 +55,13 @@ public class ItemMapper {
         itemWithBookingDto.setLastBooking(lastBooking);
         itemWithBookingDto.setNextBooking(nextBooking);
         return itemWithBookingDto;
+    }
+
+    public ItemAnswerDto toItemAnswerDto(Item item) {
+        ItemAnswerDto itemAnswerDto = new ItemAnswerDto();
+        itemAnswerDto.setId(item.getId());
+        itemAnswerDto.setName(item.getName());
+        itemAnswerDto.setOwnerId(item.getOwner().getId());
+        return itemAnswerDto;
     }
 }

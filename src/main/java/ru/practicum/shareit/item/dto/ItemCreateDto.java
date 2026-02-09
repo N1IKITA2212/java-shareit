@@ -14,4 +14,5 @@ public class ItemCreateDto {
     @JsonProperty("available")
     @NotNull(message = "Статус предмета должен быть передан")
     private Boolean isAvailable;
+    private Long requestId;
 }

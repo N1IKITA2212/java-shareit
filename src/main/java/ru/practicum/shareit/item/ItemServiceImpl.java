@@ -15,6 +15,8 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -35,6 +37,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingMapper bookingMapper;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public ItemWithBookingDto getItemById(Long itemId, Long ownerId) {
@@ -106,6 +109,14 @@ public class ItemServiceImpl implements ItemService {
                 -> new NotFoundException("Пользователь с id=" + ownerId + " не найден"));
         Item item = itemMapper.fromCreateDto(itemCreateDto);
         item.setOwner(owner);
+        if (itemCreateDto.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(itemCreateDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос с id " + itemCreateDto.getRequestId() + " не найден"));
+            if (itemRequest.getRequestor().getId().equals(ownerId)) {
+                throw new BadRequestException("Нельзя создавать вещь в ответ на собственный запрос");
+            }
+            item.setItemRequest(itemRequest);
+        }
         return itemMapper.toItemDto(itemRepository.save(item));
     }
 
