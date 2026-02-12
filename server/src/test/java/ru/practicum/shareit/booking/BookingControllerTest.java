@@ -114,8 +114,8 @@ public class BookingControllerTest {
                 .thenThrow(new BadRequestException("bad request"));
 
         mvc.perform(patch("/bookings/1")
-                .param("approved", "abc")
-                .accept(MediaType.APPLICATION_JSON))
+                        .param("approved", "abc")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 

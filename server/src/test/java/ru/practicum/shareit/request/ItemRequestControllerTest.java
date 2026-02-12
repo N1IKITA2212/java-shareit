@@ -138,7 +138,7 @@ public class ItemRequestControllerTest {
                 .thenReturn(itemRequestWithAnswersDto);
 
         mvc.perform(get("/requests/1")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.created").value(created.toString()))

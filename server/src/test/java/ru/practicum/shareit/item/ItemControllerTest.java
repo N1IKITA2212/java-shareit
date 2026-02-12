@@ -173,8 +173,8 @@ public class ItemControllerTest {
                 .thenReturn(List.of(itemDto));
 
         mvc.perform(get("/items/search")
-                .param("text", "item")
-                .accept(MediaType.APPLICATION_JSON))
+                        .param("text", "item")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$").isArray())
@@ -191,11 +191,11 @@ public class ItemControllerTest {
                 .thenReturn(commentDto);
 
         mvc.perform(post("/items/1/comment")
-                .header("X-sharer-User-Id", 1L)
-                .content(mapper.writeValueAsString(commentCreateDto))
-                .characterEncoding(StandardCharsets.UTF_8)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
+                        .header("X-sharer-User-Id", 1L)
+                        .content(mapper.writeValueAsString(commentCreateDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(1L))
                 .andExpect(jsonPath("$.text").value("text"))
                 .andExpect(jsonPath("$.authorName").value("author"));
