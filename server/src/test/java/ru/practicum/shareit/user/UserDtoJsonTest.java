@@ -32,7 +32,7 @@ public class UserDtoJsonTest {
     @Test
     void testDeserialize() throws Exception {
         String jsonContent = """
-                {
+                 {
                     "id": 1,
                     "name": "user",
                     "email": "user@mail.com"

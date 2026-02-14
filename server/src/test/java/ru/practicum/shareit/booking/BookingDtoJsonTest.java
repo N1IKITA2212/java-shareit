@@ -52,24 +52,24 @@ public class BookingDtoJsonTest {
     @Test
     void testDeserialize() throws Exception {
         String content = """
-                {
-                    "id": 1,
-                    "start": "2026-02-14T10:00:00",
-                    "end": "2026-02-14T11:00:00",
-                    "status": "APPROVED",
-                    "booker": {
-                        "id": 2,
-                        "name": "booker",
-                        "email": "booker@mail.com"
-                    },
-                    "item": {
-                        "id": 3,
-                        "name": "drill",
-                        "description": "power drill",
-                        "ownerId": 4,
-                        "isAvailable": true
+                 {
+                        "id": 1,
+                        "start": "2026-02-14T10:00:00",
+                        "end": "2026-02-14T11:00:00",
+                        "status": "APPROVED",
+                        "booker": {
+                            "id": 2,
+                            "name": "booker",
+                            "email": "booker@mail.com"
+                        },
+                        "item": {
+                            "id": 3,
+                            "name": "drill",
+                            "description": "power drill",
+                            "ownerId": 4,
+                            "isAvailable": true
+                        }
                     }
-                }
                 """;
 
         BookingDto dto = json.parseObject(content);
