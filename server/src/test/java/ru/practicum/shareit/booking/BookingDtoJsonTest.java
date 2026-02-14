@@ -10,9 +10,9 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @JsonTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -31,8 +31,8 @@ public class BookingDtoJsonTest {
 
         BookingDto dto = new BookingDto();
         dto.setStatus(BookingStatus.APPROVED);
-        dto.setEnd(LocalDateTime.of(2000,1, 1,1,1));
-        dto.setStart(LocalDateTime.of(1999,12,12,12,12));
+        dto.setEnd(LocalDateTime.of(2000, 1, 1, 1, 1));
+        dto.setStart(LocalDateTime.of(1999, 12, 12, 12, 12));
         dto.setItem(itemDto);
         dto.setBooker(booker);
         dto.setId(4L);
@@ -74,8 +74,8 @@ public class BookingDtoJsonTest {
 
         BookingDto dto = json.parseObject(content);
         assertThat(dto.getId()).isEqualTo(1L);
-        assertThat(dto.getStart()).isEqualTo(LocalDateTime.of(2026,2,14,10,0));
-        assertThat(dto.getEnd()).isEqualTo(LocalDateTime.of(2026,2,14,11,0));
+        assertThat(dto.getStart()).isEqualTo(LocalDateTime.of(2026, 2, 14, 10, 0));
+        assertThat(dto.getEnd()).isEqualTo(LocalDateTime.of(2026, 2, 14, 11, 0));
         assertThat(dto.getBooker().getId()).isEqualTo(2L);
         assertThat(dto.getBooker().getName()).isEqualTo("booker");
         assertThat(dto.getItem().getId()).isEqualTo(3L);
