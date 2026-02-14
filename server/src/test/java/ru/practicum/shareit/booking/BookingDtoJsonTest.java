@@ -51,28 +51,8 @@ public class BookingDtoJsonTest {
 
     @Test
     void testDeserialize() throws Exception {
-        String content = """
-                 {
-                        "id": 1,
-                        "start": "2026-02-14T10:00:00",
-                        "end": "2026-02-14T11:00:00",
-                        "status": "APPROVED",
-                        "booker": {
-                            "id": 2,
-                            "name": "booker",
-                            "email": "booker@mail.com"
-                        },
-                        "item": {
-                            "id": 3,
-                            "name": "drill",
-                            "description": "power drill",
-                            "ownerId": 4,
-                            "isAvailable": true
-                        }
-                    }
-                """;
 
-        BookingDto dto = json.parseObject(content);
+        BookingDto dto = json.readObject("booking.json");
         assertThat(dto.getId()).isEqualTo(1L);
         assertThat(dto.getStart()).isEqualTo(LocalDateTime.of(2026, 2, 14, 10, 0));
         assertThat(dto.getEnd()).isEqualTo(LocalDateTime.of(2026, 2, 14, 11, 0));
